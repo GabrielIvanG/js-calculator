@@ -46,7 +46,7 @@ const App = () => {
   return (
     <div className="calculator">
       <div className="displayContainer">
-        <div className="calc"></div>
+        <div className="calc">{prevNumber}</div>
         <div id="display" className="current">
           {currentNumber}
         </div>
