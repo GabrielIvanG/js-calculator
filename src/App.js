@@ -3,10 +3,10 @@ import React, { useState } from 'react';
 import './App.css';
 
 const ops = ['/', '*', '-', '+'];
+const nums = [7, 8, 9, 4, 5, 6, 1, 2, 3, 0];
 
 const App = () => {
   const [calc, setCalc] = useState('0');
-  const [operation, setOperation] = useState(undefined);
   const [lastPressed, setLastpressed] = useState(undefined);
 
   const handleClick = (e) => {
@@ -36,8 +36,12 @@ const App = () => {
       default: {
         let e = undefined;
         if (ops.includes(innerText)) {
-          if (ops.includes(lastPressed && innerText !== '-')) {
-            e = calc.slice(0, -3) + ` ${innerText} `;
+          if (ops.includes(lastPressed) && innerText !== '-') {
+            const lastNumberIdx = calc
+              .split('')
+              .reverse()
+              .findIndex((char) => char !== ' ' && nums.includes(+char));
+            e = calc.slice(0, calc.length - lastNumberIdx) + ` ${innerText} `;
           } else {
             e = `${calc} ${innerText} `;
           }
@@ -49,6 +53,7 @@ const App = () => {
     }
     setLastpressed(innerText);
   };
+
   return (
     <div className="calculator">
       <div className="displayContainer">
