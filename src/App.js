@@ -2,53 +2,59 @@ import React, { useState } from 'react';
 
 import './App.css';
 
-const nums = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
-const op = ['+', '-', '/', '*', '=', 'ac', '.'];
+const ops = ['/', '*', '-', '+'];
 
 const App = () => {
-  const [lastPressed, setLastPressed] = useState(undefined);
-  const [currentNumber, setCurrentNumber] = useState(undefined);
-  const [prevNumber, setPrevNumber] = useState(undefined);
+  const [calc, setCalc] = useState('0');
   const [operation, setOperation] = useState(undefined);
+  const [lastPressed, setLastpressed] = useState(undefined);
 
   const handleClick = (e) => {
     const { innerText } = e.target;
 
-    if (!Number.isNaN(Number(innerText))) {
-      if (currentNumber === '0') {
-        setCurrentNumber(innerText);
-      } else {
-        setCurrentNumber(currentNumber + innerText);
-      }
-    }
     switch (innerText) {
-      case 'AC':
-        setCurrentNumber('0');
-        setPrevNumber(undefined);
-        break;
-      case '.':
-        if (!currentNumber.includes('.')) {
-          setCurrentNumber(currentNumber + innerText);
-        }
-        break;
-      default: {
-        if (!operation) {
-          setOperation(innerText);
-          setPrevNumber(currentNumber);
-          setCurrentNumber('0');
-        } else {
-          setOperation(innerText);
-        }
+      case 'AC': {
+        setCalc('0');
         break;
       }
+
+      case '=': {
+        const evaluated = eval(calc);
+        setCalc(evaluated);
+        break;
+      }
+      case '.': {
+        const splitted = calc.split(/[\+\-\*\/]/);
+        const last = splitted.slice(-1)[0];
+
+        if (!last.includes('.')) {
+          setCalc(calc + '.');
+        }
+
+        break;
+      }
+      default: {
+        let e = undefined;
+        if (ops.includes(innerText)) {
+          if (ops.includes(lastPressed && innerText !== '-')) {
+            e = calc.slice(0, -3) + ` ${innerText} `;
+          } else {
+            e = `${calc} ${innerText} `;
+          }
+        } else {
+          e = calc === '0' ? innerText : calc + innerText;
+        }
+        setCalc(e);
+      }
     }
+    setLastpressed(innerText);
   };
   return (
     <div className="calculator">
       <div className="displayContainer">
-        <div className="calc">{prevNumber}</div>
+        <div className="calc"></div>
         <div id="display" className="current">
-          {currentNumber}
+          {calc}
         </div>
       </div>
       <div className="buttons">
