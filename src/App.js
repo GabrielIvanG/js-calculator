@@ -59,7 +59,7 @@ const App = () => {
       <div className="displayContainer">
         <div className="calc"></div>
         <div id="display" className="current">
-          {calc}
+          {calc.length > 19 ? 'error' : calc}
         </div>
       </div>
       <div className="buttons">
